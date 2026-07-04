@@ -1,4 +1,4 @@
-# Vanguard — Autonomous Subsystem Induction Tasks
+# Project Vanguard — Autonomous Subsystem Induction Tasks
 
 Welcome to the Autonomous team induction program! This repo will walk you through **three
 progressive tasks** covering robotic arm kinematics, sensor filtering, and computer vision —
@@ -55,7 +55,7 @@ Details are in [GETTING_STARTED.md](docs/GETTING_STARTED.md#35-where-your-files-
    ```
    NAME [ID_NUMBER]
    ```
-   Example: `Archisman Das [2025B3PS0478H]`
+   Example: `Sparsh Bhutada [2024B4A30704H]`
 
    **PR description:** the template will auto-fill when you open the PR — just fill in
    your details and check off what you completed.
