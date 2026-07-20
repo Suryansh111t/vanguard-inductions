@@ -40,6 +40,8 @@ def generate_launch_description():
         DeclareLaunchArgument("target_z", default_value="0.20"),
         DeclareLaunchArgument("elbow_up", default_value="true"),
         DeclareLaunchArgument("move_duration", default_value="4.0"),
+        DeclareLaunchArgument("start_delay", default_value="0.0",
+            description="seconds to hold at Home before moving (lets RViz load)"),
     ]
 
     robot_state_publisher = Node(
@@ -75,6 +77,7 @@ def generate_launch_description():
             "target_z": LaunchConfiguration("target_z"),
             "elbow_up": LaunchConfiguration("elbow_up"),
             "move_duration": LaunchConfiguration("move_duration"),
+            "start_delay": LaunchConfiguration("start_delay"),
             "use_controller": False,
         }],
     )

@@ -23,6 +23,7 @@ Parameters (all have defaults):
     target_x, target_y, target_z : target point in metres      (0.30, 0.15, 0.20)
     elbow_up                     : pick elbow-up IK solution    (true)
     move_duration                : seconds Home -> Target       (4.0)
+    start_delay                  : seconds to hold at Home      (0.0)
     publish_rate                 : Hz for the RViz animation    (50.0)
     use_controller               : Gazebo trajectory mode       (false)
 """
@@ -57,6 +58,7 @@ class MoveArm(Node):
         self.declare_parameter("target_z", 0.20)
         self.declare_parameter("elbow_up", True)
         self.declare_parameter("move_duration", 4.0)
+        self.declare_parameter("start_delay", 0.0)
         self.declare_parameter("publish_rate", 50.0)
         self.declare_parameter("use_controller", False)
 
@@ -65,6 +67,7 @@ class MoveArm(Node):
         tz = self.get_parameter("target_z").value
         elbow_up = self.get_parameter("elbow_up").value
         self.duration = float(self.get_parameter("move_duration").value)
+        self.start_delay = float(self.get_parameter("start_delay").value)
         self.use_controller = bool(self.get_parameter("use_controller").value)
         rate = float(self.get_parameter("publish_rate").value)
 
@@ -104,7 +107,14 @@ class MoveArm(Node):
 
     def _tick(self):
         elapsed = (self.get_clock().now() - self.start_time).nanoseconds * 1e-9
-        alpha = smoothstep(elapsed / self.duration) if self.duration > 0 else 1.0
+        # Hold at HOME for start_delay seconds (lets RViz finish loading), then move.
+        moving = elapsed - self.start_delay
+        if moving <= 0.0:
+            alpha = 0.0
+        elif self.duration > 0:
+            alpha = smoothstep(moving / self.duration)
+        else:
+            alpha = 1.0
         positions = [HOME[i] + alpha * (self.target_q[i] - HOME[i]) for i in range(3)]
 
         msg = JointState()
@@ -113,7 +123,7 @@ class MoveArm(Node):
         msg.position = positions
         self.pub.publish(msg)
 
-        if elapsed >= self.duration and not getattr(self, "_arrived", False):
+        if moving >= self.duration and not getattr(self, "_arrived", False):
             self._arrived = True
             self.get_logger().info("Arrived at target. (Still publishing to hold pose.)")
 

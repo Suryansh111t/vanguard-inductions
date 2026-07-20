@@ -93,6 +93,14 @@ ros2 launch arm3dof display.launch.py target_x:=0.25 target_y:=-0.10 target_z:=0
 ros2 launch arm3dof display.launch.py elbow_up:=false        # other elbow solution
 ```
 
+### Hold at Home before moving (useful for recording a demo)
+```bash
+ros2 launch arm3dof display.launch.py start_delay:=15.0 move_duration:=6.0
+```
+`start_delay` keeps the arm at Home for N seconds so RViz has time to finish
+loading, then it moves — so the motion happens on camera rather than before the
+window has even appeared.
+
 ### Move the joints by hand (understanding forward kinematics)
 ```bash
 ros2 launch arm3dof display.launch.py use_gui:=true
