@@ -1,0 +1,26 @@
+# ros2_control configuration for the optional Gazebo demo.
+# Loaded by the gazebo_ros2_control plugin declared in urdf/arm3dof.urdf.
+
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+arm_controller:
+  ros__parameters:
+    joints:
+      - base_yaw
+      - shoulder_pitch
+      - elbow_pitch
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    state_publish_rate: 50.0
+    action_monitor_rate: 20.0
